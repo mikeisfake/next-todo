@@ -4,32 +4,33 @@ import { useEffect, useRef, useState } from "react";
 import { Todo } from "../components/todo";
 
 export default function Home() {
+  const blankTodo = {title:'', details:''}
+
   const [todos, setTodos] = useState([]);
-  const [todoTitle, setTodoTitle] = useState("");
-  const [todoDetails, setTodoDetails] = useState("");
+  const [newTodo, setNewTodo] = useState(blankTodo)
 
   const inputRef = useRef(null)
 
-  const changeTitle = (e) => {
-    setTodoTitle(e.target.value);
-  };
-
-  const changeDetails = (e) => {
-    setTodoDetails(e.target.value);
-  };
+  const handleChange = (e) => {
+    const value = e.target.value 
+    setNewTodo({
+      ...newTodo,
+      [e.target.name]: value
+    })
+    console.log(newTodo.title)
+  }
 
   const addTodo = (e) => {
     e.preventDefault();
 
-    let newTodo = {
+    let createdTodo = {
       id: Date.now(),
-      title: todoTitle,
-      details: todoDetails,
+      title: newTodo.title,
+      details: newTodo.details,
     };
 
-    setTodos([newTodo, ...todos]);
-    setTodoTitle("");
-    setTodoDetails("");
+    setTodos([createdTodo, ...todos]);
+    setNewTodo(blankTodo);
     inputRef.current.focus()
   };
 
@@ -80,8 +81,8 @@ export default function Home() {
               name="title"
               ref={inputRef}
               placeholder="Title"
-              onChange={changeTitle}
-              value={todoTitle}
+              onChange={handleChange}
+              value={newTodo.title}
               required
               className="bg-zinc-700 rounded my-2 border-none placeholder:text-zinc-500 text-white focus:ring-offset-2 focus:ring-offset-transparent focus:ring-2 focus:ring-pink-700 focus:border-none"
             />
@@ -90,8 +91,8 @@ export default function Home() {
               type="text"
               name="details"
               placeholder="Details"
-              onChange={changeDetails}
-              value={todoDetails}
+              onChange={handleChange}
+              value={newTodo.details}
               className="bg-zinc-700 rounded my-2 border-none placeholder:text-zinc-500 text-white focus:ring-offset-2 focus:ring-offset-transparent focus:ring-2 focus:ring-pink-700 focus:border-none"
             />
           </div>
